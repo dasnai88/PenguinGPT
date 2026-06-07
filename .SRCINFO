@@ -1,0 +1,27 @@
+pkgbase = penguingpt-git
+	pkgdesc = Unofficial ChatGPT desktop wrapper for Linux
+	pkgver = 0.1.0.r0.g0
+	pkgrel = 1
+	url = https://github.com/dasnai88/PenguinGPT
+	arch = x86_64
+	license = MIT
+	makedepends = cargo
+	makedepends = curl
+	makedepends = file
+	makedepends = git
+	makedepends = nodejs
+	makedepends = npm
+	makedepends = rust
+	makedepends = wget
+	depends = appmenu-gtk-module
+	depends = gtk3
+	depends = libappindicator-gtk3
+	depends = librsvg
+	depends = openssl
+	depends = webkit2gtk-4.1
+	provides = penguingpt
+	conflicts = penguingpt
+	source = git+https://github.com/dasnai88/PenguinGPT.git
+	sha256sums = SKIP
+
+pkgname = penguingpt-git

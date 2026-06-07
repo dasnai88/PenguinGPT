@@ -96,6 +96,14 @@ If you want to do it manually instead:
 bash penguingpt-installer.sh install
 ```
 
+Arch Linux users can also install it through `yay` from the repository root:
+
+```bash
+yay -S .
+```
+
+That uses the `PKGBUILD` shipped in this repository and builds a local Arch package.
+
 ## Development
 
 Install dependencies first, then run the app in development mode:
