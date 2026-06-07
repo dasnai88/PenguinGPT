@@ -84,17 +84,24 @@ sudo pacman -S --needed base-devel curl wget file openssl appmenu-gtk-module gtk
 
 ## Install
 
-From the project root:
+One-command install from the project root:
 
 ```bash
-npm install
+bash install.sh
+```
+
+If you want to do it manually instead:
+
+```bash
+bash penguingpt-installer.sh install
 ```
 
 ## Development
 
-Run the app in development mode:
+Install dependencies first, then run the app in development mode:
 
 ```bash
+npm install
 npm run tauri dev
 ```
 
@@ -111,16 +118,10 @@ The npm Tauri script sets `APPIMAGE_EXTRACT_AND_RUN=1` and `NO_STRIP=1` so the A
 
 ## Install and uninstall
 
-Use the single installer CLI for all install and uninstall operations:
+Use the installer CLI for uninstall and advanced install options:
 
 ```bash
 bash penguingpt-installer.sh --help
-```
-
-Local install:
-
-```bash
-bash penguingpt-installer.sh install
 ```
 
 Local uninstall:
