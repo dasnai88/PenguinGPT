@@ -96,13 +96,34 @@ If you want to do it manually instead:
 bash penguingpt-installer.sh install
 ```
 
-Arch Linux users can also install it through `yay` from the repository root:
+## Install with yay
+
+Arch Linux and CachyOS users can install PenguinGPT through `yay` from a local clone of this repository.
 
 ```bash
+sudo pacman -S --needed base-devel
+git clone https://github.com/dasnai88/PenguinGPT.git
+cd PenguinGPT
 yay -S .
 ```
 
-That uses the `PKGBUILD` shipped in this repository and builds a local Arch package.
+This uses the `PKGBUILD` in the repository and builds the `penguingpt-git` package locally.
+
+After the first install, update it with:
+
+```bash
+cd PenguinGPT
+git pull
+yay -S .
+```
+
+Remove it with:
+
+```bash
+sudo pacman -Rns penguingpt-git
+```
+
+If you already have the repository cloned, skip the `git clone` step and run `yay -S .` from the repo root.
 
 ## Development
 
