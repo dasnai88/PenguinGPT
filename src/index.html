@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PenguinGPT</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f1216;
+        --panel: rgba(28, 33, 39, 0.82);
+        --panel-2: rgba(34, 40, 47, 0.9);
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #edf1f5;
+        --muted: #aeb8c3;
+        --muted-2: #8b97a3;
+        --accent: #4cc2ff;
+        --accent-soft: rgba(76, 194, 255, 0.16);
+        --good: #4ade80;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family:
+          "Noto Sans", "Liberation Sans", "Inter", "Segoe UI", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 20% 10%, rgba(76, 194, 255, 0.12), transparent 24%),
+          radial-gradient(circle at 80% 0%, rgba(74, 222, 128, 0.08), transparent 22%),
+          linear-gradient(180deg, #0c0f13, var(--bg) 52%, #0c0f13 100%);
+        overflow: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 100% 52px;
+        opacity: 0.35;
+        pointer-events: none;
+      }
+
+      .wrap {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+      }
+
+      .window {
+        width: min(1040px, calc(100vw - 24px));
+        min-height: 680px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(40, 46, 53, 0.92), rgba(20, 24, 29, 0.96));
+        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+        overflow: hidden;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        background:
+          radial-gradient(circle at 34% 30%, #f8fafc 0 10%, transparent 11%),
+          radial-gradient(circle at 66% 30%, #f8fafc 0 10%, transparent 11%),
+          linear-gradient(180deg, #202934, #11161d);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        position: relative;
+        flex: none;
+      }
+
+      .logo::before {
+        content: "";
+        position: absolute;
+        inset: 7px 10px 6px;
+        border-radius: 10px 10px 14px 14px;
+        background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+      }
+
+      .logo::after {
+        content: "";
+        position: absolute;
+        left: 15px;
+        top: 17px;
+        width: 6px;
+        height: 5px;
+        border-radius: 999px;
+        background: #f59e0b;
+        box-shadow: 6px 0 0 #f59e0b;
+      }
+
+      .brand-title {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+
+      .brand-subtitle {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--good);
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+        padding: 18px;
+      }
+
+      .hero,
+      .side {
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .hero {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 560px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(76, 194, 255, 0.18);
+        background: var(--accent-soft);
+        color: #caedff;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .title {
+        margin: 16px 0 10px;
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
+        max-width: 10ch;
+      }
+
+      .lead {
+        margin: 0;
+        max-width: 62ch;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .chip {
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        font-size: 12px;
+      }
+
+      .notes {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .side {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-height: 560px;
+      }
+
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .panel-title {
+        margin: 0;
+        font-size: 15px;
+      }
+
+      .panel-state {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .launch-box {
+        padding: 16px;
+        border-radius: 14px;
+        background: var(--panel-2);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .pulse-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .pulse {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 0 rgba(76, 194, 255, 0.5);
+        animation: pulse 1.4s infinite;
+      }
+
+      .status {
+        margin: 0;
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .progress {
+        width: 100%;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        margin-top: 14px;
+      }
+
+      .bar {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), #7dd3fc);
+        transition: width 0.18s linear;
+      }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 2px;
+      }
+
+      .button {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        text-decoration: none;
+        text-align: center;
+        font: inherit;
+        cursor: pointer;
+        transition:
+          transform 0.16s ease,
+          background 0.16s ease,
+          border-color 0.16s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.14);
+      }
+
+      .button.primary {
+        border-color: rgba(76, 194, 255, 0.28);
+        background: linear-gradient(180deg, rgba(76, 194, 255, 0.2), rgba(76, 194, 255, 0.12));
+      }
+
+      .toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .toggle strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .toggle span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .switch {
+        appearance: none;
+        width: 46px;
+        height: 28px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.1);
+        position: relative;
+        cursor: pointer;
+        flex: none;
+      }
+
+      .switch::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #f8fafc;
+        transition: transform 0.18s ease;
+      }
+
+      .switch:checked {
+        background: rgba(76, 194, 255, 0.26);
+        border-color: rgba(76, 194, 255, 0.34);
+      }
+
+      .switch:checked::after {
+        transform: translateX(18px);
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: auto;
+      }
+
+      .list-item {
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.025);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .foot {
+        padding: 0 18px 18px;
+        color: var(--muted-2);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(76, 194, 255, 0.5);
+        }
+        70% {
+          box-shadow: 0 0 0 13px rgba(76, 194, 255, 0);
+        }
+      }
+
+      @media (max-width: 900px) {
+        .content {
+          grid-template-columns: 1fr;
+        }
+
+        .hero,
+        .side {
+          min-height: unset;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .wrap {
+          padding: 10px;
+        }
+
+        .window {
+          width: calc(100vw - 16px);
+          border-radius: 14px;
+        }
+
+        .topbar,
+        .content,
+        .foot {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+
+        .actions {
+          grid-template-columns: 1fr;
+        }
+
+        .badge {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="window" aria-label="PenguinGPT launcher">
+        <header class="topbar">
+          <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+              <p class="brand-title">PenguinGPT</p>
+              <p class="brand-subtitle">Unofficial ChatGPT desktop wrapper for Linux</p>
+            </div>
+          </div>
+          <div class="badge">
+            <span class="badge-dot" aria-hidden="true"></span>
+            Official site only
+          </div>
+        </header>
+
+        <div class="content">
+          <section class="hero">
+            <div>
+              <div class="eyebrow">Linux launcher</div>
+              <h1 class="title">Open ChatGPT in a native webview.</h1>
+              <p class="lead">
+                PenguinGPT starts as a simple local app and then opens the official
+                <code>chatgpt.com</code> site inside the window. It does not use the OpenAI API,
+                does not ask for an API key, and does not intercept credentials or tokens.
+              </p>
+
+              <div class="chip-row" aria-label="App guarantees">
+                <span class="chip">Official ChatGPT login flow</span>
+                <span class="chip">Session handled by WebView</span>
+                <span class="chip">No backend proxy</span>
+                <span class="chip">AppImage target</span>
+              </div>
+            </div>
+
+            <div class="notes">
+              This is a Linux wrapper, not an official OpenAI client. Your account is used only
+              through the standard ChatGPT website flow in the embedded webview.
+            </div>
+          </section>
+
+          <aside class="side">
+            <div class="panel-head">
+              <div>
+                <p class="panel-title">Launch status</p>
+                <div class="panel-state" id="state">Preparing redirect</div>
+              </div>
+            </div>
+
+            <div class="launch-box">
+              <div class="pulse-row">
+                <span class="pulse" aria-hidden="true"></span>
+                <p class="status" id="status-text">Opening the official ChatGPT site...</p>
+              </div>
+
+              <div class="progress" aria-hidden="true">
+                <div class="bar" id="bar"></div>
+              </div>
+
+              <div class="meta">
+                <span id="countdown">Auto-open in 3s</span>
+                <span>Enter opens now</span>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="button primary" id="open-now" href="https://chatgpt.com">Open ChatGPT</a>
+              <button class="button" id="stay-here" type="button">Keep launcher</button>
+            </div>
+
+            <label class="toggle" for="auto-open">
+              <div>
+                <strong>Auto-open on start</strong>
+                <span>Stored locally on this machine.</span>
+              </div>
+              <input class="switch" id="auto-open" type="checkbox" checked />
+            </label>
+
+            <div class="list">
+              <div class="list-item">Uses the official `chatgpt.com` login flow only.</div>
+              <div class="list-item">No password, cookie, token, or localStorage interception.</div>
+              <div class="list-item">No OpenAI API traffic from the app itself.</div>
+            </div>
+          </aside>
+        </div>
+
+        <footer class="foot">
+          Not affiliated with OpenAI. PenguinGPT simply launches the official ChatGPT site inside
+          a desktop webview and keeps your session using normal webview storage.
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      const target = "https://chatgpt.com";
+      const autoOpenKey = "penguingpt:autoOpen";
+      const countdownEl = document.getElementById("countdown");
+      const statusTextEl = document.getElementById("status-text");
+      const stateEl = document.getElementById("state");
+      const barEl = document.getElementById("bar");
+      const autoOpenEl = document.getElementById("auto-open");
+      const openNowEl = document.getElementById("open-now");
+      const stayHereEl = document.getElementById("stay-here");
+
+      let autoOpen = localStorage.getItem(autoOpenKey);
+      autoOpen = autoOpen === null ? true : autoOpen === "true";
+      autoOpenEl.checked = autoOpen;
+
+      let seconds = 3;
+      let timer = null;
+
+      const go = () => {
+        window.location.replace(target);
+      };
+
+      const render = () => {
+        const pct = Math.max(0, Math.min(100, Math.round(((3 - seconds) / 3) * 100)));
+        barEl.style.width = `${pct}%`;
+        countdownEl.textContent = autoOpen ? `Auto-open in ${seconds}s` : "Auto-open disabled";
+        stateEl.textContent = autoOpen ? "Preparing redirect" : "Launcher paused";
+        statusTextEl.textContent = autoOpen
+          ? "Opening the official ChatGPT site..."
+          : "Launcher stays open until you choose to continue.";
+      };
+
+      const stopTimer = () => {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      };
+
+      const startTimer = () => {
+        stopTimer();
+        seconds = 3;
+        render();
+
+        if (!autoOpen) {
+          return;
+        }
+
+        timer = setInterval(() => {
+          seconds -= 1;
+          render();
+
+          if (seconds <= 0) {
+            stopTimer();
+            go();
+          }
+        }, 1000);
+      };
+
+      autoOpenEl.addEventListener("change", () => {
+        autoOpen = autoOpenEl.checked;
+        localStorage.setItem(autoOpenKey, String(autoOpen));
+        startTimer();
+      });
+
+      openNowEl.addEventListener("click", (event) => {
+        event.preventDefault();
+        go();
+      });
+
+      stayHereEl.addEventListener("click", () => {
+        autoOpen = false;
+        autoOpenEl.checked = false;
+        localStorage.setItem(autoOpenKey, "false");
+        stopTimer();
+        render();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          go();
+        }
+      });
+
+      startTimer();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "penguingpt",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Unofficial ChatGPT desktop wrapper for Linux",
+  "scripts": {
+    "tauri": "APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=1 tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.2"
+  }
+}

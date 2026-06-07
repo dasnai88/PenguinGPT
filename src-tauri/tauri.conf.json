@@ -1,0 +1,45 @@
+{
+  "productName": "PenguinGPT",
+  "version": "0.1.0",
+  "identifier": "com.penguingpt.app",
+  "build": {
+    "frontendDist": "../src",
+    "removeUnusedCommands": true
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "PenguinGPT",
+        "url": "index.html",
+        "width": 1200,
+        "height": 850,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "visible": true,
+        "decorations": true
+      }
+    ],
+    "withGlobalTauri": false
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["appimage"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": false,
+        "files": {
+          "/usr/share/applications/PenguinGPT.desktop": "desktop/PenguinGPT.desktop",
+          "/usr/share/icons/hicolor/512x512/apps/penguingpt.png": "icons/icon.png"
+        }
+      }
+    }
+  }
+}

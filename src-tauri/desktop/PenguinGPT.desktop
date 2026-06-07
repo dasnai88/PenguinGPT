@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=PenguinGPT
+Comment=Unofficial ChatGPT desktop wrapper for Linux
+GenericName=ChatGPT Desktop Wrapper
+Exec=penguingpt %U
+Icon=penguingpt
+Terminal=false
+Categories=Network;InstantMessaging;Chat;Utility;
+Keywords=ChatGPT;OpenAI;Penguin;AI;Chat;
+StartupNotify=true
+StartupWMClass=PenguinGPT
+X-GNOME-WMClass=PenguinGPT
